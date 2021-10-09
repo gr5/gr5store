@@ -95,7 +95,9 @@ function gr5_hook_javascript_footer() {
      return;
 
   // okay this is the "home" page
+  echo "<script src='".dirname($_SERVER['PHP_SELF'])."/wp-content/themes/gr5/grstuff.js'></script>\n";
   echo "<script>\n";
+  echo "var gr_theme_path='".dirname($_SERVER['PHP_SELF'])."/wp-content/themes/gr5/';\n";
   echo "var gr_prices=[];\n";
   echo "var gr_instock=[];\n";
   echo "var gr_pretty_price=[];\n";
@@ -112,46 +114,9 @@ function gr5_hook_javascript_footer() {
   product_info_to_jscript('xyz_plastic',65);
   product_info_to_jscript('xyz_metal',62);
   echo "var cart_items = ".WC()->cart->get_cart_contents_count().";\n";
-?>
 
-
-
-function doit()
-{
-  location.href="/wp/cart/?add-to-cart=44,59";
-}
-
-
-var x = document.getElementsByClassName("entry-content");
-var i;
-var bFound=false;
-for (i = 0; i < x.length; i++) 
-{
-  t=x[i];
-  if (t.innerHTML.indexOf("We sell Bath")>0)
-  {
-    bFound=true;
-    break;
-  }
-}
-if (bFound)
-{
-  //alert(t.innerHTML);
-  x="<font color=red>This page is experimental.</font>  <a href='https://thegr5store.com/wp/?product_cat=bath'>Click here to shop.</a>";
-  
-  x+="<p><input type='button' value='add multiple items to cart' onclick='doit()'>";
-  x+="<p>pretty if price: "+gr_pretty_price['if']+"<p>";
-  x+= "cart items: "+cart_items+"<p>";
-  x+= gr_img_cube;
-  t.innerHTML += x;
-}
-</script>
-
-
-<?php
-    
-
-
+  echo "gr_go();\n";
+  echo "</script>\n";
 }
 add_action('wp_footer', 'gr5_hook_javascript_footer');
 

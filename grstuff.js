@@ -39,6 +39,14 @@ class laser_lens
     return (fr >= this.minfr && fr <= this.maxfr);
   }
   
+  laserImagePath()
+  {
+    if (this.laser_type == "reg")
+      return gr_theme_path+"las_norm.jpg";
+    else
+      return gr_theme_path+"las_glass.jpg";
+  }
+
   laserPretty()
   {
     if (this.laser_type == "reg") return "Regular";
@@ -101,27 +109,34 @@ function maxMirrorForF(f)
 
 function display_chosen(div_id)
 {
-  var str="<table><tr><th>Laser</th><th>Lens</th><th>Mirror F/#</th><th>Max Mirror Diameter</th></tr>\n";
-  // reg
+  var str="<table><tr><th colspan=2>Laser Type</th><th>Lens</th><th>Mirror F/#</th><th>Max Mirror Diameter</th></tr>\n";
+
+  // first count qty of lenses
+  var qty_lenses=0;
   for (j=0; j < laser_lens_combos.length; j++)
   {
     ll = laser_lens_combos[j];
-    if (ll.laser_type !="reg")continue;
     if (ll.qtyMirrorsNeed > 0)
-    {
-      str+="<tr><td>"+ll.laserPretty()+"</td><td>"+ll.lens_fl+"mm "+ll.notes+"</td><td>"+ll.mirrors+"</td>";
-      str+="<td>"+maxMirrorForF(ll.minMirror)+"</td></tr>\n";
-    }
+      qty_lenses++;
   }
-  // glass
+
+  var bFirst=true;
   for (j=0; j < laser_lens_combos.length; j++)
   {
     ll = laser_lens_combos[j];
-    if (ll.laser_type !="glass")continue;
     if (ll.qtyMirrorsNeed > 0)
     {
-      str+="<tr><td>"+ll.laserPretty()+"</td><td>"+ll.lens_fl+"mm "+ll.notes+"</td><td>"+ll.mirrors+"</td>";
+      if (bFirst==true)
+      {
+        str+="<tr><td rowspan="+qty_lenses+"><img src='"+ll.laserImagePath()+"' width=50></td><td>\n";
+      }
+      else
+      {
+        str+="<tr><td>\n";
+      }
+      str+=ll.laserPretty()+"</td><td>"+ll.lens_fl+"mm "+ll.notes+"</td><td>"+ll.mirrors+"</td>";
       str+="<td>"+maxMirrorForF(ll.minMirror)+"</td></tr>\n";
+      bFirst=false;
     }
   }
   str+="</table>";
