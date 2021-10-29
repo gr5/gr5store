@@ -98,7 +98,6 @@ class cost_summer
         // do nothing
     }
 
-    sum+=+gr_prices['if']+gr_prices['flat'];
     if (this.bSkipCube==false) sum+=gr_prices['cube'];
     if (this.bSkipFlat==false) sum+=gr_prices['flat'];
     if (this.bSkipIFPlastic==false) sum+=gr_prices['if'];
@@ -249,7 +248,7 @@ function display_chosen(div_id)
   
   var str="<table style='font-size:0.7rem'>";
   str+="<tr><td colspan=3><div style='vertical-align: middle'>";
-  str+=ll.laserPretty()+" laser<img src='"+ll.laserImagePath()+"' width=50>";
+  str+=ll.laserPretty()+" laser<img src='"+ll.laserImagePath()+"' width=50 style='vertical-align:middle'>";
   str+=" <input type=button value='continue' id='"+div_id+"btn"+"'>";
   str+="<span id='"+div_id+"spn'></span></div></td></tr>";
   str+="<tr><th>Lens</th>";
@@ -386,7 +385,7 @@ function gr_go()
   x+="example   4    for f/4 <br>\n";
   x+="F/#&nbsp;";
   x+="<input type='text' id='gr_fnum' value=6 size=2";
-  x+=" onkeydown = 'if (event.keyCode==13)gr_addF()' >";
+  x+=" onkeydown = 'if (event.keyCode==13)gr_addF()' style='width:auto' >";
   x+="<input type='button' value='add' onclick='gr_addF()'><br>\n";
   x+="<span id='gr_spn_sofar'></span><br>\n";
   x+="<span id='idCost'></span><br>\n";
@@ -446,7 +445,7 @@ function gr_go()
 var laser_lens_combos = [];
 
 
-var inst_cost_summer = new cost_summer(laser_lens_combos);
+var inst_cost_summer = new cost_summer(laser_lens_combos); // inst=instance
 
 
 
