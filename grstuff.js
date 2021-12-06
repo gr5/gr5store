@@ -1,4 +1,3 @@
-
 function doit()
 {
   location.href="/wp/cart/?add-to-cart=44,59";
@@ -65,7 +64,7 @@ class cost_summer
   
   reset()
   {
-    this.xyz="kit"; // other options: assy metal plastic none
+    this.xyz="kit"; // other options: asm metal plastic none
     this.bAssembled=false;
     this.bSkipDivergers=false;
     this.bSkipCube=false;
@@ -76,27 +75,26 @@ class cost_summer
     this.laser="1.7"; // 1.7 means regular laser.  2.6 means glass laser
   }
   
-  get_cost()
+  get_xyz_cost()
   {
-    var sum=0;
-
     switch (this.xyz)
     {
       case 'metal':
-        sum+=gr_prices['xyz_metal'];
-        break;
+        return gr_prices['xyz_metal'];
       case 'plastic':
-        sum+=gr_prices['xyz_plastic'];
-        break;
+        return gr_prices['xyz_plastic'];
       case 'kit':
-        sum+=gr_prices['xyz_kit'];
-        break;
-      case 'assy':
-        sum+=gr_prices['xyz_asm'];
-        break;
+        return gr_prices['xyz_kit'];
+      case 'asm':
+        return gr_prices['xyz_asm'];
       case 'none':
-        // do nothing
+        return 0;
     }
+  }
+
+  get_cost()
+  {
+    var sum=this.get_xyz_cost();
 
     if (this.bSkipCube==false) sum+=gr_prices['cube'];
     if (this.bSkipFlat==false) sum+=gr_prices['flat'];
@@ -292,7 +290,10 @@ function gr_add_f(f)
     for (i=0; i<fratios.length; ++i)
     {
       if (fratios[i] == f)
-        return; // already have this one
+      {
+        gr_update_fs();
+        return; // already have this one.  Don't add it again.
+      }
     }
     fratios.push(f);
     fratios.sort(function(a, b) {return a-b;});
@@ -378,6 +379,8 @@ function gr_go()
   //alert(t.innerHTML);
   x="<font color=red>This page is not done so please </font>  <a href='https://thegr5store.com/wp/?product_cat=bath'>click here to shop.</a> Although you are welcome to play with this page.<p>";
 
+  //x+= "<div class='gr_img'>"+gr_img_cube+"</div>";
+
   x+="Use this page to help you pick out an inexpensive Bath Interferometer. ";
   x+="<br>";
   x+="Step 1 - choose laser and diverger<br>\n";
@@ -386,7 +389,7 @@ function gr_go()
   x+="F/#&nbsp;";
   x+="<input type='text' id='gr_fnum' value=6 size=2";
   x+=" onkeydown = 'if (event.keyCode==13)gr_addF()' style='width:auto' >";
-  x+="<input type='button' value='add' onclick='gr_addF()'><br>\n";
+  x+="&nbsp;<input type='button' value='add' onclick='gr_addF()'><br>\n";
   x+="<span id='gr_spn_sofar'></span><br>\n";
   x+="<span id='idCost'></span><br>\n";
   x+="<div id='idOptics1'></div>\n";
@@ -440,6 +443,8 @@ function gr_go()
  
   choose_optics();
   
+  //jQuery('.gr_img img').width(50).height(50);
+
 }
 
 var laser_lens_combos = [];
@@ -447,10 +452,258 @@ var laser_lens_combos = [];
 
 var inst_cost_summer = new cost_summer(laser_lens_combos); // inst=instance
 
+function gr_price_diff(kit)
+{
+    var increase = -inst_cost_summer.get_xyz_cost(); // current price
+    if (kit != "none")
+      increase += gr_prices["xyz_"+kit]; // proposed price
+    if (increase == 0) return "";
+    if (increase > 0)
+      return "($"+increase.toFixed(2)+" more)";
+    else
+      return "(Save $"+(-increase).toFixed(2)+")";
+}
 
 
 var result="";
 
+function gr_cont(chosen_laser)
+{
+    document.getElementById("idOptics1").innerHTML="";
+    document.getElementById("idOptics2").innerHTML="";
+    document.getElementById("idOptics3").innerHTML="";
+    document.getElementById("idOptics4").innerHTML="";
+    ll_resetAll();
+    selectLenses(chosen_laser);
+    inst_cost_summer.reset();
+    inst_cost_summer.xyz="asm";
+    update_cost_step2(chosen_laser);
+    gr_cont_display();
+}
+
+function gr_cont_display()
+{
+    var x="";
+    x+="<table style='font-size:0.7rem'>";
+    x+="<tr><th colspan=3>";
+    x+="<center>Recommended parts to buy:</center>";
+    x+="</th></tr>";
+    x+="<tr>";
+
+    //
+    // laser
+    //
+
+    var j;
+    var bFound=false;
+    for (j=0; j < laser_lens_combos.length; j++)
+    {
+      ll = laser_lens_combos[j];
+      if (ll.qtyMirrorsNeed > 0)
+      {
+        break;
+      }
+    }
+
+
+    x+="<td class='gr_img'>";
+    x+="<img src='"+ll.laserImagePath()+"' width=50 style='vertical-align:middle'>";
+    x+="</td><td>";
+    x+=ll.laserPretty()+" laser";
+    x+="</td><td>$";
+    if (ll.laser == "reg")
+      x+=gr_prices['laser17'];
+    else
+      x+=gr_prices['laser26'];
+
+    x+="</td>";
+    x+="</tr>";
+
+    //
+    // diverging lenses
+    //
+
+    var qtyEdmunds=0;
+    for (j=0; j < laser_lens_combos.length; j++)
+    {
+      ll = laser_lens_combos[j];
+      if (ll.qtyMirrorsNeed > 0)
+      {
+        bNothingFound=false;
+        if (ll.notes.indexOf("Edmund") !== -1)
+        {
+          qtyEdmunds++;
+          continue;
+        }
+        x+="<tr>";
+        x+="<td class='gr_img'>";
+        x+=gr_images['lens9'];
+        x+="</td><td>";
+        x+=ll.lens_fl+"mm diverger";
+        x+="</td><td>$";
+        x+=ll.price;
+        x+="</td>";
+        x+="</tr>";
+
+      }
+    }
+
+    // cube
+
+    x+="<tr>";
+    x+="<td class='gr_img'>";
+    x+=gr_images['cube'];
+    x+="</td><td>";
+    x+="15mm splitter cube";
+    x+="</td><td>$";
+    if (inst_cost_summer.bSkipCube)
+      x+="<strike>";
+    x+=gr_prices['cube'];
+    if (inst_cost_summer.bSkipCube)
+      x+="</strike>";
+    x+="</td><td>";
+    if (inst_cost_summer.bSkipCube)
+      x+="<input type='checkbox' "+
+         "onClick=\"inst_cost_summer.bSkipCube=false;gr_cont_display();\" >";
+    else
+      x+="<input type='checkbox' checked "+
+         "onClick=\"inst_cost_summer.bSkipCube=true;gr_cont_display();\" >";
+    x+=  "Include Cube";
+    x+=  "<br><span style='font-size:0.5rem'>Only uncheck this if you already have a 15mm splitter cube</span>";
+    x+="</td></tr>";
+
+    // flat
+
+    x+="<tr>";
+    x+="<td class='gr_img'>";
+    x+=gr_images['flat'];
+    x+="</td><td>";
+    x+="Flat mirror (mounted)";
+    x+="</td><td>$";
+    if (inst_cost_summer.bSkipFlat)
+      x+="<strike>";
+    x+=gr_prices['flat'];
+    if (inst_cost_summer.bSkipFlat)
+      x+="</strike>";
+    x+="</td><td>";
+    if (inst_cost_summer.bSkipFlat)
+      x+="<input type='checkbox' "+
+         "onClick=\"inst_cost_summer.bSkipFlat=false;gr_cont_display();\" >";
+    else
+      x+="<input type='checkbox' checked "+
+         "onClick=\"inst_cost_summer.bSkipFlat=true;gr_cont_display();\" >";
+    x+="Include Flat";
+    x+="<br><span style='font-size:0.5rem'>Only uncheck this if you already have a lambda/4 flat 12mm-20mm on a side</span>";
+    x+="</td></tr>";
+
+    // interferometer
+
+    x+="<tr>";
+    x+="<td class='gr_img'>";
+    x+=gr_images['if'];
+    x+="</td><td>";
+    x+="Interferometer plastic parts";
+    x+="</td><td>$";
+    if (inst_cost_summer.bSkipIFPlastic)
+      x+="<strike>";
+    x+=gr_prices['if'];
+    if (inst_cost_summer.bSkipIFPlastic)
+      x+="</strike>";
+    x+="</td><td>";
+    if (inst_cost_summer.bSkipIFPlastic)
+      x+="<input type='checkbox' "+
+         "onClick=\"inst_cost_summer.bSkipIFPlastic=false;gr_cont_display();\" >";
+    else
+      x+="<input type='checkbox' checked "+
+         "onClick=\"inst_cost_summer.bSkipIFPlastic=true;gr_cont_display();\" >";
+    x+="Include Interferometer Plastic Parts";
+    x+="<br><span style='font-size:0.5rem'>Only uncheck this if you will be 3d printing the plastic portion yourself (contact me for files)</span>";
+    x+="</td></tr>";
+
+    // XYZ Stage
+
+
+    // assembled stage
+    // complete kit (save $)- takes 1 or 2 hours to assemble *details*
+    // partial kit (save $)- metal parts only.  for people who have a 3d printer
+    // no stage (- for people who already have an xyz stage
+
+    x+="<tr>";
+    x+="<td class='gr_img'>";
+    x+=gr_images['xyz_asm'];
+    x+="</td><td>";
+    x+="XYZ Stage";
+    x+="</td><td>$";
+    x+= inst_cost_summer.get_xyz_cost();
+    x+="</td><td>";
+    x+="<input type='radio' name='gr_radio' id='gr_rad_asm' value=1><label for='gr_rad_asm'> "+
+       "assembled "+gr_price_diff("asm")+"</label><br>";
+    x+="<input type='radio' name='gr_radio' id='gr_rad_kit' value=2><label for='gr_rad_kit'> "+
+       "complete kit "+gr_price_diff("kit")+" - 1 or 2 hours to assemble</label><br>";
+    x+="<input type='radio' name='gr_radio' id='gr_rad_metal' value=3><label for='gr_rad_metal'> "+
+       "partial kit "+gr_price_diff("metal")+" - metal parts only. If you have a 3d printer.</label><br>";
+    x+="<input type='radio' name='gr_radio' id='gr_rad_none' value=4><label for='gr_rad_none'> "+
+       "no stage "+gr_price_diff("none")+" For people who already have an xyz stage</label><br>";
+
+
+    x+="</td></tr>";
+
+
+
+
+    // total
+    x+="<tr><td></td><td>Total:</td><td>"+inst_cost_summer.get_cost()+"</td></tr>";
+    x+="</table>"
+
+    document.getElementById("idOptics1").innerHTML=x;
+
+    x = jQuery(window).width();
+    x+= " "+jQuery("#primary").width();
+    document.getElementById("idOptics2").innerHTML= x;
+
+
+    jQuery('.gr_img img').width(50).height(50);
+    switch (inst_cost_summer.xyz)
+    {
+      case 'asm':
+        jQuery("#gr_rad_asm").prop("checked", true);
+        break;
+      case 'kit':
+        jQuery("#gr_rad_kit").prop("checked", true);
+        break;
+      case 'metal':
+        jQuery("#gr_rad_metal").prop("checked", true);
+        break;
+      case 'none':
+        jQuery("#gr_rad_none").prop("checked", true);
+        break;
+      default:
+    }
+
+
+    jQuery('input[type=radio][name="gr_radio"]').change(function() {
+        var rb_value = jQuery('input[name="gr_radio"]:checked').val();
+        switch(rb_value)
+        {
+          case "1":
+            inst_cost_summer.xyz="asm";
+            break;
+          case "2":
+            inst_cost_summer.xyz="kit";
+            break;
+          case "3":
+            inst_cost_summer.xyz="metal";
+            break;
+          case "4":
+            inst_cost_summer.xyz="none";
+            break;
+          default:
+        }
+        gr_cont_display();
+    });
+
+
+}
 
 function gr_load_cookies()
 {
@@ -472,6 +725,16 @@ function update_cost_step1(laser_type)
     var cost = inst_cost_summer.get_cost();
     document.getElementById('idCost').innerHTML = "Expected cost: "+cost;
 }
+
+function update_cost_step2(laser_type)
+{
+    if (laser_type=="glass")
+      inst_cost_summer.laser="2.6";
+    var cost = inst_cost_summer.get_cost();
+    document.getElementById('idCost').innerHTML = "Expected cost: "+cost;
+}
+
+
 
 function choose_optics()
 {
@@ -517,7 +780,7 @@ function choose_optics()
       selectLenses("reg");
       display_chosen("idOptics2");
       document.getElementById('idOptics2btn').value="Continue with these parts";
-      document.getElementById('idOptics2btn').onClick="gr_cont('reg')";
+      document.getElementById('idOptics2btn').onclick=function(){gr_cont('reg');};
       update_cost_step1("reg");
       if (willLaserHandle("glass"))
       {
@@ -534,9 +797,9 @@ function choose_optics()
             "<br>This laser should be fine for your needs";
 
         document.getElementById('idOptics4btn').value="Choose this laser ("+extra_cost+" more)";
-        document.getElementById('idOptics4btn').onClick="gr_cont('glass')";
+        document.getElementById('idOptics4btn').onclick=function(){gr_cont('glass');};
         document.getElementById('idOptics4spn').innerHTML=
-            "<br>This laser has a glass focusing lens which is easier to take out and clean";
+            "<br>This laser is nicer and has a glass focusing lens which is easier to take out and clean";
         
       }
     }
@@ -545,7 +808,7 @@ function choose_optics()
       selectLenses("glass");
       display_chosen("idOptics2");
       document.getElementById('idOptics2btn').value="Continue with these parts";
-      document.getElementById('idOptics2btn').onClick="gr_cont('glass')";
+      document.getElementById('idOptics2btn').onclick=function(){gr_cont('glass');};
       update_cost_step1("glass");
     }
 

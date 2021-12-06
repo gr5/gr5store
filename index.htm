@@ -68,6 +68,12 @@ table {
 </style>
 </head>
 <body>
+
+<script src='https://thegr5store.com/wp/wp-includes/js/jquery/jquery.min.js?ver=3.6.0' id='jquery-core-js'></script>
+<script src='https://thegr5store.com/wp/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
+
+
+
 <div class="entry-content si-entry">
 	
 <p>We sell Bath Interferometers for testing telescope mirrors.</p>
@@ -78,45 +84,62 @@ table {
 var gr_prices=[];
 var gr_instock=[];
 var gr_pretty_price=[];
+var gr_images=[];
 var gr_theme_path="";
+
+
+
+
 gr_prices['laser17'] = 15;
 gr_instock['laser17'] = 1;
 gr_pretty_price['laser17'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>15.00</bdi></span>';
+gr_images['laser17'] = '<img width="150" height="150" src="https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/laser_sm.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/laser_sm.jpg?resize=150%2C150&amp;ssl=1 150w, https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/laser_sm.jpg?resize=450%2C450&amp;ssl=1 450w, https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/laser_sm.jpg?resize=100%2C100&amp;ssl=1 100w, https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/laser_sm.jpg?zoom=2&amp;resize=150%2C150&amp;ssl=1 300w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['laser26'] = 29;
 gr_instock['laser26'] = 1;
 gr_pretty_price['laser26'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>29.00</bdi></span>';
+gr_images['laser26'] = '<img width="150" height="150" src="https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/05/glass_laser_sq.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/05/glass_laser_sq.jpg?w=800&amp;ssl=1 800w, https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/05/glass_laser_sq.jpg?resize=300%2C300&amp;ssl=1 300w, https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/05/glass_laser_sq.jpg?resize=150%2C150&amp;ssl=1 150w, https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/05/glass_laser_sq.jpg?resize=768%2C768&amp;ssl=1 768w, https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/05/glass_laser_sq.jpg?resize=450%2C450&amp;ssl=1 450w, https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/05/glass_laser_sq.jpg?resize=600%2C600&amp;ssl=1 600w, https://i0.wp.com/thegr5store.com/wp/wp-content/uploads/2021/05/glass_laser_sq.jpg?resize=100%2C100&amp;ssl=1 100w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['lens765'] = 10;
 gr_instock['lens765'] = 1;
 gr_pretty_price['lens765'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>10.00</bdi></span>';
+gr_images['lens765'] = '<img width="150" height="150" src="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?w=700&amp;ssl=1 700w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=300%2C300&amp;ssl=1 300w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=150%2C150&amp;ssl=1 150w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=450%2C450&amp;ssl=1 450w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=600%2C600&amp;ssl=1 600w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=100%2C100&amp;ssl=1 100w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['lens9'] = 15;
 gr_instock['lens9'] = 1;
-gr_pretty_price['lens9'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>10.00</bdi></span>';
+gr_pretty_price['lens9'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>15.00</bdi></span>';
+gr_images['lens9'] = '<img width="150" height="150" src="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?w=700&amp;ssl=1 700w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=300%2C300&amp;ssl=1 300w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=150%2C150&amp;ssl=1 150w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=450%2C450&amp;ssl=1 450w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=600%2C600&amp;ssl=1 600w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=100%2C100&amp;ssl=1 100w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['lens13'] = 10;
 gr_instock['lens13'] = 1;
 gr_pretty_price['lens13'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>10.00</bdi></span>';
+gr_images['lens13'] = '<img width="150" height="150" src="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?w=700&amp;ssl=1 700w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=300%2C300&amp;ssl=1 300w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=150%2C150&amp;ssl=1 150w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=450%2C450&amp;ssl=1 450w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=600%2C600&amp;ssl=1 600w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/6mmlens_mounted_sq.jpg?resize=100%2C100&amp;ssl=1 100w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['cube'] = 35;
 gr_instock['cube'] = 1;
 gr_pretty_price['cube'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>35.00</bdi></span>';
-var gr_img_cube = '<img width="150" height="150" src="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?resize=150%2C150&amp;ssl=1 150w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?resize=450%2C450&amp;ssl=1 450w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?resize=100%2C100&amp;ssl=1 100w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?zoom=2&amp;resize=150%2C150&amp;ssl=1 300w" sizes="(max-width: 150px) 100vw, 150px" />';
+gr_images['cube'] = '<img width="150" height="150" src="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?resize=150%2C150&amp;ssl=1 150w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?resize=450%2C450&amp;ssl=1 450w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?resize=100%2C100&amp;ssl=1 100w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/splitter.jpg?zoom=2&amp;resize=150%2C150&amp;ssl=1 300w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['if'] = 30;
 gr_instock['if'] = 1;
 gr_pretty_price['if'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>30.00</bdi></span>';
+gr_images['if'] = '<img width="150" height="150" src="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/06/bath_no_optics.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/06/bath_no_optics.jpg?w=1000&amp;ssl=1 1000w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/06/bath_no_optics.jpg?resize=300%2C300&amp;ssl=1 300w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/06/bath_no_optics.jpg?resize=150%2C150&amp;ssl=1 150w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/06/bath_no_optics.jpg?resize=768%2C768&amp;ssl=1 768w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/06/bath_no_optics.jpg?resize=450%2C450&amp;ssl=1 450w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/06/bath_no_optics.jpg?resize=600%2C600&amp;ssl=1 600w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/06/bath_no_optics.jpg?resize=100%2C100&amp;ssl=1 100w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['flat'] = 20;
 gr_instock['flat'] = 1;
 gr_pretty_price['flat'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>20.00</bdi></span>';
+gr_images['flat'] = '<img width="150" height="150" src="https://i1.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/round_flat2.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i1.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/round_flat2.jpg?resize=150%2C150&amp;ssl=1 150w, https://i1.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/round_flat2.jpg?resize=100%2C100&amp;ssl=1 100w, https://i1.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/round_flat2.jpg?zoom=2&amp;resize=150%2C150&amp;ssl=1 300w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['xyz_asm'] = 90;
 gr_instock['xyz_asm'] = 1;
 gr_pretty_price['xyz_asm'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>90.00</bdi></span>';
+gr_images['xyz_asm'] = '<img width="150" height="150" src="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?w=700&amp;ssl=1 700w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=300%2C300&amp;ssl=1 300w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=150%2C150&amp;ssl=1 150w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=450%2C450&amp;ssl=1 450w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=600%2C600&amp;ssl=1 600w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=100%2C100&amp;ssl=1 100w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['xyz_kit'] = 40;
 gr_instock['xyz_kit'] = 1;
 gr_pretty_price['xyz_kit'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>40.00</bdi></span>';
+gr_images['xyz_kit'] = '<img width="150" height="150" src="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?w=700&amp;ssl=1 700w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=300%2C300&amp;ssl=1 300w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=150%2C150&amp;ssl=1 150w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=450%2C450&amp;ssl=1 450w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=600%2C600&amp;ssl=1 600w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/stage_sm.jpg?resize=100%2C100&amp;ssl=1 100w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['xyz_plastic'] = 15;
 gr_instock['xyz_plastic'] = 1;
 gr_pretty_price['xyz_plastic'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>15.00</bdi></span>';
+gr_images['xyz_plastic'] = '<img width="150" height="150" src="https://i1.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_plastic.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i1.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_plastic.jpg?resize=150%2C150&amp;ssl=1 150w, https://i1.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_plastic.jpg?resize=450%2C450&amp;ssl=1 450w, https://i1.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_plastic.jpg?resize=100%2C100&amp;ssl=1 100w, https://i1.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_plastic.jpg?zoom=2&amp;resize=150%2C150&amp;ssl=1 300w" sizes="(max-width: 150px) 100vw, 150px" />';
 gr_prices['xyz_metal'] = 25;
 gr_instock['xyz_metal'] = 1;
 gr_pretty_price['xyz_metal'] = '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>25.00</bdi></span>';
-var cart_items = 0;
+gr_images['xyz_metal'] = '<img width="150" height="150" src="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_metal-1.jpg?resize=150%2C150&amp;ssl=1" class="attachment-woocommerce_gallery_thumbnail size-woocommerce_gallery_thumbnail" alt="" loading="lazy" srcset="https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_metal-1.jpg?w=1014&amp;ssl=1 1014w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_metal-1.jpg?resize=300%2C300&amp;ssl=1 300w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_metal-1.jpg?resize=150%2C150&amp;ssl=1 150w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_metal-1.jpg?resize=768%2C768&amp;ssl=1 768w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_metal-1.jpg?resize=450%2C450&amp;ssl=1 450w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_metal-1.jpg?resize=600%2C600&amp;ssl=1 600w, https://i2.wp.com/thegr5store.com/wp/wp-content/uploads/2021/09/xyzkit_metal-1.jpg?resize=100%2C100&amp;ssl=1 100w" sizes="(max-width: 150px) 100vw, 150px" />';
+
+
 
 gr_go();
 
