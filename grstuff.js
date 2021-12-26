@@ -1,14 +1,15 @@
 function doit()
 {
-  location.href="/wp/cart/?add-to-cart=44,59";
+  //location.href="/wp/cart/?add-to-cart=44,59";
 }
+
 
 var fratios = [];
 var fratios_subset=[];
 
 class laser_lens
 {
-  constructor(_laser_type, _lens_fl, _minfr, _maxfr, _price, _notes="")
+  constructor(_laser_type, _lens_fl, _minfr, _maxfr, _price, _notes="", _product_id)
   {
     this.laser_type = _laser_type;
     this.lens_fl    = _lens_fl;
@@ -16,6 +17,7 @@ class laser_lens
     this.maxfr      = _maxfr;
     this.notes      = _notes;
     this.price      = _price;
+    this.product_id = _product_id;
   }
   
   reset()
@@ -138,6 +140,41 @@ class cost_summer
       ret+=" (doesn't include $"+edmunds_sum+" for 3rd party lenses)";
     return ret;
   }
+}
+
+function gr_get_prod_ids()
+{
+    var ret = array();
+    if (this.bSkipCube==false) ret.push(gr_prod_id['cube']);
+    if (this.bSkipFlat==false) ret.push(gr_prod_id['flat']);
+    if (this.bSkipIFPlastic==false) ret.push(gr_prod_id['if']);
+    
+    if (this.bSkipLaser==false)
+    {
+       switch(this.laser)
+       {
+         case "2.6":
+           ret.push(gr_prod_id['laser26']);
+           break;
+         case "1.7":
+         default:
+           ret.push(gr_prod_id['laser17']);
+       }
+    }
+
+    // now lenses
+    var edmunds_sum=0;
+    for (j=0; j < laser_lens_combos.length; j++)
+    {
+      ll = laser_lens_combos[j];
+      if (ll.qtyMirrorsNeed > 0)
+      {
+        if (ll.notes.indexOf("Edmund") !== -1)
+          ret.push(ll.product_id);
+      }
+    }
+    return ret;
+
 }
 
 function gr_hide_graph()
@@ -347,12 +384,12 @@ function gr_clear_f()
 function gr_go()
 {
   // must be sorted by minimum F/# column
-  laser_lens_combos.push( new laser_lens("glass", 7.65, 1.8, 4.4, gr_prices['lens765']) );
-  laser_lens_combos.push( new laser_lens("glass", 9,    2.6, 5.2, gr_prices['lens9']) );
-  laser_lens_combos.push( new laser_lens("reg",   7.65, 3.3, 6.6, gr_prices['lens765']) );
-  laser_lens_combos.push( new laser_lens("reg",   9,    3.6, 7.2, gr_prices['lens9']) );
-  laser_lens_combos.push( new laser_lens("glass", 13,   3.7, 7.4, gr_prices['lens13']) );
-  laser_lens_combos.push( new laser_lens("reg",   13,   4.7, 10, gr_prices['lens13']) );
+  laser_lens_combos.push( new laser_lens("glass", 7.65, 1.8, 4.4, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
+  laser_lens_combos.push( new laser_lens("glass", 9,    2.6, 5.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
+  laser_lens_combos.push( new laser_lens("reg",   7.65, 3.3, 6.6, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
+  laser_lens_combos.push( new laser_lens("reg",   9,    3.6, 7.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
+  laser_lens_combos.push( new laser_lens("glass", 13,   3.7, 7.4, gr_prices['lens13'], "", gr_prod_id['lens13'] ));
+  laser_lens_combos.push( new laser_lens("reg",   13,   4.7, 10,  gr_prices['lens13'], "", gr_prod_id['lens13'] ));
 
   // edmunds lenses
   laser_lens_combos.push( new laser_lens("glass", 18,   6.1, 10, 26, "(Edmund Optics 32-966)") ); // f/5 minimum.  6.1 chosen to give priority to 13mm lens
@@ -654,12 +691,25 @@ function gr_cont_display()
     // total
     x+="<tr><td></td><td>Total:</td><td>"+inst_cost_summer.get_cost()+"</td></tr>";
     x+="</table>"
-
+    
+    //
+    // buttons at the bottom
+    //
+    
+    if (cart_items > 0)
+    {
+        x+="<input type='button' value='Empty Shopping Cart' onclick='gr_empty()'> ";
+        x+="You have "+cart_items+" items in the cart already.  Do you want to ";
+        x+="remove them first before we add more?<br>\n";
+    }
+    
+    x+="<input type='button' value='Add to Cart' onclick='gr_addtocart()'>\n";
+    
     document.getElementById("idOptics1").innerHTML=x;
 
-    x = jQuery(window).width();
+    /*x = jQuery(window).width();
     x+= " "+jQuery("#primary").width();
-    document.getElementById("idOptics2").innerHTML= x;
+    document.getElementById("idOptics2").innerHTML= x;*/
 
 
     jQuery('.gr_img img').width(50).height(50);
@@ -836,4 +886,10 @@ function choose_optics()
 
 }
 
+function gr_addtocart()
+{
+  var url = "/wp/cart/?add-to-cart=";
+  url += gr_get_prod_ids().join(",");
+  location.href=url;
+}
 

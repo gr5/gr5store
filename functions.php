@@ -88,7 +88,7 @@ function product_info_to_jscript($desc,$id) {
   echo "gr_instock['$desc'] = ".$_product->is_in_stock().";\n";
   echo "gr_pretty_price['$desc'] = '".$_product->get_price_html()."';\n";
   echo "gr_images['$desc'] = '".$_product->get_image("woocommerce_gallery_thumbnail")."';\n";
-  //if ($desc=='cube') echo "var gr_img_cube = '".$_product->get_image("woocommerce_gallery_thumbnail")."';\n";
+  echo "gr_prod_id['$desc'] = $id;\n";
 }
 
 function gr5_hook_javascript_footer() {
@@ -103,6 +103,7 @@ function gr5_hook_javascript_footer() {
   echo "var gr_instock=[];\n";
   echo "var gr_pretty_price=[];\n";
   echo "var gr_images=[];\n";
+  echo "var gr_prod_id=[];\n";
   product_info_to_jscript('laser17',44);
   product_info_to_jscript('laser26',11);
   product_info_to_jscript('lens765',39);
