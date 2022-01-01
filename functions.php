@@ -76,6 +76,25 @@ add_action( 'wp_loaded',        'woocommerce_maybe_add_multiple_products_to_cart
 
 
 
+//
+// clear cart feature
+//
+
+function remove_item_from_cart() {
+    global $woocommerce;
+    $returned = ['status'=>'error','msg'=>'Your cart could not be emptied'];
+    $woocommerce->cart->empty_cart();
+    if ( $woocommerce->cart->get_cart_contents_count() == 0 ) {
+        $returned = ['status'=>'success','msg'=>'Your order has been reset!'];
+    }
+    die(json_encode($returned));
+}
+
+add_action('wp_ajax_clear_cart', 'remove_item_from_cart');
+add_action('wp_ajax_nopriv_clear_cart', 'remove_item_from_cart');
+
+
+
 
 
 //

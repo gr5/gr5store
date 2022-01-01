@@ -116,6 +116,7 @@ class cost_summer
        }
     }
     
+
     // now lenses
     var edmunds_sum=0;
     var bNothingFound=true;
@@ -140,41 +141,84 @@ class cost_summer
       ret+=" (doesn't include $"+edmunds_sum+" for 3rd party lenses)";
     return ret;
   }
+  
+    get_prod_ids()
+    {
+        var ret = new Array();
+
+        // laser
+        if (this.bSkipLaser==false)
+        {
+           switch(this.laser)
+           {
+             case "2.6":
+               ret.push(gr_prod_id['laser26']);
+               break;
+             case "1.7":
+             default:
+               ret.push(gr_prod_id['laser17']);
+           }
+        }
+
+        // now lenses
+        var edmunds_sum=0;
+        for (j=0; j < laser_lens_combos.length; j++)
+        {
+          ll = laser_lens_combos[j];
+          if (ll.qtyMirrorsNeed > 0)
+          {
+            if (ll.notes.indexOf("Edmund") == -1)
+              ret.push(ll.product_id);
+          }
+        }
+
+        if (this.bSkipCube==false) ret.push(gr_prod_id['cube']);
+        if (this.bSkipFlat==false) ret.push(gr_prod_id['flat']);
+        if (this.bSkipIFPlastic==false) ret.push(gr_prod_id['if']);
+
+
+        // stage options
+        switch (this.xyz)
+        {
+          case 'metal':
+            ret.push(gr_prod_id['xyz_metal']);
+            break;
+          case 'plastic':
+            ret.push(gr_prod_id['xyz_plastic']);
+            break;
+          case 'kit':
+            ret.push(gr_prod_id['xyz_kit']);
+            break;
+          case 'asm':
+            ret.push(gr_prod_id['xyz_asm']);
+            break;
+          case 'none':
+        }
+
+        return ret;
+
+    }
 }
 
-function gr_get_prod_ids()
+function gr_empty()
 {
-    var ret = array();
-    if (this.bSkipCube==false) ret.push(gr_prod_id['cube']);
-    if (this.bSkipFlat==false) ret.push(gr_prod_id['flat']);
-    if (this.bSkipIFPlastic==false) ret.push(gr_prod_id['if']);
-    
-    if (this.bSkipLaser==false)
-    {
-       switch(this.laser)
-       {
-         case "2.6":
-           ret.push(gr_prod_id['laser26']);
-           break;
-         case "1.7":
-         default:
-           ret.push(gr_prod_id['laser17']);
-       }
-    }
+    document.getElementById('idClearCart').innerHTML='Please wait...';
+    jQuery.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: '/wp/wp-admin/admin-ajax.php?action=clear_cart',
+    data: {action : 'clear_cart'},
+    success: function (data) {
+            if (data.status != 'success') {
+                alert(data.msg);
+            } else {
+                document.getElementById('idClearCart').innerHTML='';
+                alert("Cart successfully cleared");
+                cart_items=0;
 
-    // now lenses
-    var edmunds_sum=0;
-    for (j=0; j < laser_lens_combos.length; j++)
-    {
-      ll = laser_lens_combos[j];
-      if (ll.qtyMirrorsNeed > 0)
-      {
-        if (ll.notes.indexOf("Edmund") !== -1)
-          ret.push(ll.product_id);
-      }
-    }
-    return ret;
-
+            }
+        }
+    });
 }
 
 function gr_hide_graph()
@@ -414,11 +458,12 @@ function gr_go()
   }
   if (!bFound) return;
   //alert(t.innerHTML);
-  x="<font color=red>This page is not done so please </font>  <a href='https://thegr5store.com/wp/?product_cat=bath'>click here to shop.</a> Although you are welcome to play with this page.<p>";
 
   //x+= "<div class='gr_img'>"+gr_img_cube+"</div>";
 
-  x+="Use this page to help you pick out an inexpensive Bath Interferometer. ";
+  x="Use this page to help you pick out an inexpensive Bath Interferometer or if you already know what you want you ";
+  x+="<a href='https://thegr5store.com/wp/?product_cat=bath'>can click here to see all products.</a><p>";
+
   x+="<br>";
   x+="Step 1 - choose laser and diverger<br>\n";
   x+="Please enter F/#'s of a mirror you want to test. Then press enter or click add button until you have listed them all.<br>\n";
@@ -698,12 +743,12 @@ function gr_cont_display()
     
     if (cart_items > 0)
     {
-        x+="<input type='button' value='Empty Shopping Cart' onclick='gr_empty()'> ";
+        x+="<span id='idClearCart'><input type='button' value='Empty Shopping Cart' onclick='gr_empty()'> ";
         x+="You have "+cart_items+" items in the cart already.  Do you want to ";
-        x+="remove them first before we add more?<br>\n";
+        x+="remove them first before we add more?</span><br>\n";
     }
     
-    x+="<input type='button' value='Add to Cart' onclick='gr_addtocart()'>\n";
+    x+="<input type='button' value='Add to Cart' onclick='gr_addtocart()' id='idAddToCart'>\n";
     
     document.getElementById("idOptics1").innerHTML=x;
 
@@ -888,8 +933,9 @@ function choose_optics()
 
 function gr_addtocart()
 {
+  document.getElementById('idAddToCart').setAttribute("disabled", "disabled");
   var url = "/wp/cart/?add-to-cart=";
-  url += gr_get_prod_ids().join(",");
+  url += inst_cost_summer.get_prod_ids().join(",");
   location.href=url;
 }
 
