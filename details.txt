@@ -1,0 +1,21 @@
+Yes this is the latest folder of files that get copied to thegr5store.com
+
+scp grstuff.js grfivorg@gr5.org/public_html/wp/wp-content/themes/gr5/
+
+
+
+
+.woocommerce div.product p.available-on-backorder{color:#e22;}
+p.backorder_notification{color:#e22;}
+
+
+ABOVE needs to be entered through the website (it ends up in dynamic-styles.css):
+
+Click:  
+Appearance (not store related - just below the store
+Customize
+Additional CSS
+
+Enter above red coloring.
+
+Click "Publish".

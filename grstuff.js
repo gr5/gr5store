@@ -429,10 +429,12 @@ function gr_go()
 {
   // must be sorted by minimum F/# column
   laser_lens_combos.push( new laser_lens("glass", 7.65, 1.8, 4.4, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
-  laser_lens_combos.push( new laser_lens("glass", 9,    2.6, 5.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
+//laser_lens_combos.push( new laser_lens("glass", 9,    2.6, 5.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
+  laser_lens_combos.push( new laser_lens("glass",10,    2.8, 5.6, gr_prices['lens10'],  "", gr_prod_id['lens10'] ));
   laser_lens_combos.push( new laser_lens("reg",   7.65, 3.3, 6.6, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
-  laser_lens_combos.push( new laser_lens("reg",   9,    3.6, 7.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
+//laser_lens_combos.push( new laser_lens("reg",   9,    3.6, 7.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
   laser_lens_combos.push( new laser_lens("glass", 13,   3.7, 7.4, gr_prices['lens13'], "", gr_prod_id['lens13'] ));
+  laser_lens_combos.push( new laser_lens("reg",  10,    4.0, 8.0, gr_prices['lens10'], "", gr_prod_id['lens10'] ));
   laser_lens_combos.push( new laser_lens("reg",   13,   4.7, 10,  gr_prices['lens13'], "", gr_prod_id['lens13'] ));
 
   // edmunds lenses
@@ -558,7 +560,9 @@ function gr_cont(chosen_laser)
     ll_resetAll();
     selectLenses(chosen_laser);
     inst_cost_summer.reset();
-    inst_cost_summer.xyz="asm";
+    inst_cost_summer.xyz="asm"; // set default - asm is assembled version, kit is kit version
+    if (gr_instock['xyz_asm'] == false)
+        inst_cost_summer.xyz="kit";
     update_cost_step2(chosen_laser);
     gr_cont_display();
 }
@@ -719,7 +723,10 @@ function gr_cont_display()
     x+= inst_cost_summer.get_xyz_cost();
     x+="</td><td>";
     x+="<input type='radio' name='gr_radio' id='gr_rad_asm' value=1><label for='gr_rad_asm'> "+
-       "assembled "+gr_price_diff("asm")+"</label><br>";
+       "assembled "+gr_price_diff("asm");
+    if (gr_instock['xyz_asm'] == false)
+       x+=" <b>(out of stock)</b>";
+    x+="</label><br>";
     x+="<input type='radio' name='gr_radio' id='gr_rad_kit' value=2><label for='gr_rad_kit'> "+
        "complete kit "+gr_price_diff("kit")+" - 1 or 2 hours to assemble</label><br>";
     x+="<input type='radio' name='gr_radio' id='gr_rad_metal' value=3><label for='gr_rad_metal'> "+

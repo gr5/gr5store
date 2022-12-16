@@ -10,3 +10,13 @@ Template:       sinatra
 Version:        1.0
 */
 
+
+
+.woocommerce div.product  p.available-on-backorder {
+  color: #e22;
+}
+
+p.backorder_notification {
+  color: #e22;
+}
+

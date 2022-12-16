@@ -2,6 +2,7 @@
 // 
 // enqueue script for parent theme stylesheet
 //
+// note that parent theme is sinatra
 
 function gr5_parent_styles() {
      
@@ -10,6 +11,49 @@ function gr5_parent_styles() {
          
 }
 add_action( 'wp_enqueue_scripts', 'gr5_parent_styles');
+
+//
+// change backorder text
+//
+
+function gr_alt_message($n) {
+  if ($n==1)
+    return "Out of stock but you can backorder"; // alternative text versus default woocommerce msg
+  return "OUT OF STOCK"; // this text added to name of product in cart
+}
+
+/*
+function gr_product_availability_text( $availability_text, $product ) {
+    // Check if product status is on backorder
+    if ($product->get_stock_status() === 'onbackorder') {
+        $altmessage = gr_alt_message();
+        $availability_text = __( $altmessage, 'sinatra' );
+    }
+    return $availability_text;
+}
+//add_filter( 'woocommerce_get_availability_text', 'gr_product_availability_text', 10, 2 );
+*/
+
+
+function gr_custom_cart_item_name( $_product_title, $cart_item, $cart_item_key ) {
+  $altmessage = gr_alt_message(2);
+  if ( $cart_item['data']->backorders_require_notification() && $cart_item['data']->is_on_backorder( $cart_item['quantity'] ) ) {
+    $_product_title .=  __( ' - '. $altmessage, 'woocommerce' ) ;
+  }
+  return $_product_title;
+}
+add_filter( 'woocommerce_cart_item_name', 'gr_custom_cart_item_name', 10, 3);
+
+function gr_backorder_text($availability) {
+    $altmessage = gr_alt_message(1);
+    foreach($availability as $i) {
+        $availability = str_replace('Available on backorder', $altmessage, $availability);
+    }
+    return $availability;
+} 
+add_filter('woocommerce_get_availability', 'gr_backorder_text');
+
+
 
 
 //
@@ -94,6 +138,18 @@ add_action('wp_ajax_clear_cart', 'remove_item_from_cart');
 add_action('wp_ajax_nopriv_clear_cart', 'remove_item_from_cart');
 
 
+//
+// Change "shipping options" message
+//
+
+
+function my_custom_no_shipping_message( $message ) {
+	return __( 'No shipping options - contact me to add shipping for your country at thegr5store@gmail.com ' );
+}
+
+add_filter( 'woocommerce_no_shipping_available_html', 'my_custom_no_shipping_message' );
+add_filter( 'woocommerce_cart_no_shipping_available_html', 'my_custom_no_shipping_message' );
+
 
 
 
@@ -101,10 +157,21 @@ add_action('wp_ajax_nopriv_clear_cart', 'remove_item_from_cart');
 // CODE ONLY FOR HOME PAGE IS BELOW
 //
 
+function gr_to_tf($b) {
+  if ($b)
+    return "true";
+  else
+    return "false";
+}
+
 function product_info_to_jscript($desc,$id) {
   $_product = wc_get_product($id);
   echo "gr_prices['$desc'] = ".$_product->get_price().";\n";
-  echo "gr_instock['$desc'] = ".$_product->is_in_stock().";\n";
+  echo "gr_instock['$desc'] = ".gr_to_tf(
+      $_product->is_in_stock() && 
+      ($_product->get_manage_stock() == false ||
+      $_product->get_stock_quantity() > 0)
+      ).";\n";
   echo "gr_pretty_price['$desc'] = '".$_product->get_price_html()."';\n";
   echo "gr_images['$desc'] = '".$_product->get_image("woocommerce_gallery_thumbnail")."';\n";
   echo "gr_prod_id['$desc'] = $id;\n";
@@ -127,6 +194,7 @@ function gr5_hook_javascript_footer() {
   product_info_to_jscript('laser26',11);
   product_info_to_jscript('lens765',39);
   product_info_to_jscript('lens9',35);
+  product_info_to_jscript('lens10',126);
   product_info_to_jscript('lens13',38);
   product_info_to_jscript('cube',33);
   product_info_to_jscript('if',28);
