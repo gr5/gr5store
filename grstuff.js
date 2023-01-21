@@ -25,12 +25,20 @@ class laser_lens
     this.mirrors="";
     this.qtyMirrorsNeed=0;
     this.minMirror=1000; // fratio
+    this.mirror_ary=[];
   }
 
   addMirror(f)
   {
-    ll.mirrors+=f+" ";
-    ll.qtyMirrorsNeed++;
+    this.mirror_ary.push(f);
+    this.mirror_ary.sort(function(a, b) {return a-b;});
+    this.mirrors="";
+    for(var i=0; i<this.mirror_ary.length; i++)
+    {
+        var ff = this.mirror_ary[i];
+        this.mirrors+=ff+" ";
+    }
+    this.qtyMirrorsNeed++;
     if (f < this.minMirror) 
       this.minMirror=f;
   }  
@@ -256,12 +264,13 @@ function gr_show_graph()
 function willLaserHandle(laser_type)
 {
     // can we handle all focal ratios with this laser?
-    for (i=0; i < fratios_subset.length; i++)
+    var j;
+    for (var i=0; i < fratios_subset.length; i++)
     {
       fratio = fratios_subset[i];
       for (j=0; j < laser_lens_combos.length; j++)
       {
-        ll = laser_lens_combos[j];
+        var ll = laser_lens_combos[j];
         if (ll.laser_type == laser_type && ll.inrange(fratio))
           break; // handled
       }
@@ -278,15 +287,57 @@ function ll_resetAll()
   }
 }
 
+function findNextNeededLL(index, laser_type_in, bForwards)
+{
+    var i,ll;
+    var increment=1;
+    if (bForwards == false)
+        increment=-1;
+    for (i=index+increment; i<laser_lens_combos.length && i>=0; i+=increment)
+    {
+        ll = laser_lens_combos[i];
+        if (ll.laser_type == laser_type_in && ll.qtyMirrorsNeed > 0)
+            return i;
+    }
+    // no more exist
+    return -1;
+    
+}
+
+function tryMove(i1, i2)  
+{
+    // try to move all F#'s from i1 laserLens to i2 laserlens
+    // return true if successful
+    var ll1 = laser_lens_combos[i1];
+    var ll2 = laser_lens_combos[i2];
+    var i;
+    for (i=0; i<ll1.mirror_ary.length; i++)
+    {
+        var f = ll1.mirror_ary[i];
+        if (ll2.inrange(f) == false)
+            return false; // can't do it
+    }
+    
+    // It's possible!  let's do it
+    for (i=0; i<ll1.mirror_ary.length; i++)
+    {
+        var f = ll1.mirror_ary[i];
+        ll2.addMirror(f);
+    }
+    ll1.reset(); // empty all mirrors
+    return true;
+}
 
 function selectLenses(laser_type_in)
 {
+    var i,j,ll,iprev,fratio;
     // assumes laser_lens_combos is sorted 
     // 
     for (i=0; i < fratios_subset.length; i++)
     {
       fratio = fratios_subset[i];
-      for (j = laser_lens_combos.length-1; j>=0; j--)
+      //for (j = laser_lens_combos.length-1; j>=0; j--)
+      for (j = 0; j<laser_lens_combos.length; j++)
       {
         ll = laser_lens_combos[j];
         if ( (ll.laser_type == laser_type_in || laser_type_in=="") && ll.inrange(fratio))
@@ -295,6 +346,34 @@ function selectLenses(laser_type_in)
           break; // check next mirror
         }
       }
+    }
+    
+    // okay but maybe we can simplify.  Maybe we can move all the mirrors from one F/# to another
+    // i is outer loop and ll needed
+    // inext is next ll needed that we will compare to
+
+    i = -1;
+    while(true)
+    {
+        i = findNextNeededLL(i, laser_type_in, true); // get next
+        if (i == -1)
+            break; // done
+        inext = findNextNeededLL(i, laser_type_in, true); // get next
+        if (inext == -1)
+            break; // done
+        if (tryMove(i, inext, laser_type_in))
+        {
+            // success! start over at beggining
+            i=-1;
+            continue;
+        }
+        if (tryMove(inext, i, laser_type_in)) // try the other way
+        {
+            // success! start over at beggining
+            i=-1;
+            continue;
+        }
+        // no luck so far - increment i
     }
 }
 
@@ -430,19 +509,22 @@ function gr_go()
   // must be sorted by minimum F/# column
   laser_lens_combos.push( new laser_lens("glass", 7.65, 1.8, 4.4, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
 //laser_lens_combos.push( new laser_lens("glass", 9,    2.6, 5.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
-  laser_lens_combos.push( new laser_lens("glass",10,    2.8, 5.6, gr_prices['lens10'],  "", gr_prod_id['lens10'] ));
+  laser_lens_combos.push( new laser_lens("glass", 10,   2.8, 5.6, gr_prices['lens10'],  "", gr_prod_id['lens10'] ));
   laser_lens_combos.push( new laser_lens("reg",   7.65, 3.3, 6.6, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
 //laser_lens_combos.push( new laser_lens("reg",   9,    3.6, 7.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
   laser_lens_combos.push( new laser_lens("glass", 13,   3.7, 7.4, gr_prices['lens13'], "", gr_prod_id['lens13'] ));
-  laser_lens_combos.push( new laser_lens("reg",  10,    4.0, 8.0, gr_prices['lens10'], "", gr_prod_id['lens10'] ));
+  laser_lens_combos.push( new laser_lens("reg",   10,   4.0, 8.0, gr_prices['lens10'], "", gr_prod_id['lens10'] ));
   laser_lens_combos.push( new laser_lens("reg",   13,   4.7, 10,  gr_prices['lens13'], "", gr_prod_id['lens13'] ));
+  
+  laser_lens_combos.push( new laser_lens("glass", 20,   5.4, 12,  gr_prices['lens20'], "", gr_prod_id['lens20'] ));
+  laser_lens_combos.push( new laser_lens("reg",   20,   8.0, 16,  gr_prices['lens20'], "", gr_prod_id['lens20'] ));
+  
 
   // edmunds lenses
-  laser_lens_combos.push( new laser_lens("glass", 18,   6.1, 10, 26, "(Edmund Optics 32-966)") ); // f/5 minimum.  6.1 chosen to give priority to 13mm lens
-  laser_lens_combos.push( new laser_lens("reg",   18,   8,  15,  26, "(Edmund Optics 32-966)") );
-  laser_lens_combos.push( new laser_lens("glass", 30,   8.5, 15, 26, "(Edmund Optics 45-133)") );
-  laser_lens_combos.push( new laser_lens("glass", 40,   10, 20,  27, "(Edmund Optics 63-540)") );
-  laser_lens_combos.push( new laser_lens("reg",   30,   13, 25,  26, "(Edmund Optics 45-133)") );
+  //laser_lens_combos.push( new laser_lens("glass", 30,   8.5, 15, 26, "(Edmund Optics 45-133)") );
+  // changed min from 10 to 10.2 to discourage edmund lenses
+  laser_lens_combos.push( new laser_lens("glass", 40,   10, 25,  27, "(Edmund Optics 63-540)") );
+  //laser_lens_combos.push( new laser_lens("reg",   30,   13, 25,  26, "(Edmund Optics 45-133)") );
   laser_lens_combos.push( new laser_lens("reg",   40,   17, 34,  27, "(Edmund Optics 63-540)") );
 
 
@@ -866,18 +948,18 @@ function choose_optics()
         fratios_subset.splice(i,1); // remove this one from the array
         i--;
       }
-      else if (fratio > laser_lens_combos[laser_lens_combos.length-1].maxfr)
+      else if (fratio > laser_lens_combos[laser_lens_combos.length-2].maxfr)
       {
-        result+="<font color='red'>F/"+fratio+" mirror (greater than F/"+laser_lens_combos[laser_lens_combos.length-1].maxfr+
+        result+="<font color='red'>F/"+fratio+" mirror (greater than F/"+laser_lens_combos[laser_lens_combos.length-2].maxfr+
                 ") will need a longer focal length lens than I normally sell but these are available - please contact us about testing this mirror</font><br>";
         fratios_subset.splice(i,1); // remove this one from the array
         i--;
       }
     }
 
+    var bDisableRegularLaser=true;
 
-
-    if (willLaserHandle("reg"))
+    if (bDisableRegularLaser== false && willLaserHandle("reg"))
     {
       selectLenses("reg");
       display_chosen("idOptics2");
@@ -905,7 +987,7 @@ function choose_optics()
         
       }
     }
-    else
+    else if (willLaserHandle("glass") && fratios_subset.length>0)
     {
       selectLenses("glass");
       display_chosen("idOptics2");

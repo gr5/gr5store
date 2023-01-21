@@ -196,6 +196,7 @@ function gr5_hook_javascript_footer() {
   product_info_to_jscript('lens9',35);
   product_info_to_jscript('lens10',126);
   product_info_to_jscript('lens13',38);
+  product_info_to_jscript('lens20',149);
   product_info_to_jscript('cube',33);
   product_info_to_jscript('if',28);
   product_info_to_jscript('flat',40);
