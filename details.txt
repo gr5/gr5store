@@ -1,6 +1,6 @@
 Yes this is the latest folder of files that get copied to thegr5store.com
 
-scp grstuff.js grfivorg@gr5.org/public_html/wp/wp-content/themes/gr5/
+scp grstuff.js grfivorg@gr5.org:public_html/wp/wp-content/themes/gr5/
 
 
 

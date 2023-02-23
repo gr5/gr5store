@@ -522,7 +522,6 @@ function gr_go()
 
   // edmunds lenses
   //laser_lens_combos.push( new laser_lens("glass", 30,   8.5, 15, 26, "(Edmund Optics 45-133)") );
-  // changed min from 10 to 10.2 to discourage edmund lenses
   laser_lens_combos.push( new laser_lens("glass", 40,   10, 25,  27, "(Edmund Optics 63-540)") );
   //laser_lens_combos.push( new laser_lens("reg",   30,   13, 25,  26, "(Edmund Optics 45-133)") );
   laser_lens_combos.push( new laser_lens("reg",   40,   17, 34,  27, "(Edmund Optics 63-540)") );
