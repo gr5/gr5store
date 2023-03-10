@@ -677,11 +677,14 @@ function gr_cont_display()
     x+="<img src='"+ll.laserImagePath()+"' width=50 style='vertical-align:middle'>";
     x+="</td><td>";
     x+=ll.laserPretty()+" laser";
+    if (ll.laser_type=="glass" && gr_instock['laser26']==false)
+      x+=" <b><font color=red>out of stock</font></b> (backorder okay)";
     x+="</td><td>$";
-    if (ll.laser == "reg")
+    if (ll.laser_type == "reg")
       x+=gr_prices['laser17'];
     else
       x+=gr_prices['laser26'];
+
 
     x+="</td>";
     x+="</tr>";
@@ -956,7 +959,7 @@ function choose_optics()
       }
     }
 
-    var bDisableRegularLaser=true;
+    var bDisableRegularLaser=false;
 
     if (bDisableRegularLaser== false && willLaserHandle("reg"))
     {
@@ -981,7 +984,10 @@ function choose_optics()
 
         document.getElementById('idOptics4btn').value="Choose this laser ("+extra_cost+" more)";
         document.getElementById('idOptics4btn').onclick=function(){gr_cont('glass');};
-        document.getElementById('idOptics4spn').innerHTML=
+        var glass_txt="";
+        if (gr_instock['laser26'] == false)
+            glass_txt="<b>out of stock</b> You may backorder.";
+        document.getElementById('idOptics4spn').innerHTML=glass_txt+
             "<br>This laser is nicer and has a glass focusing lens which is easier to take out and clean";
         
       }
