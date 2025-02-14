@@ -1,6 +1,6 @@
 function doit()
 {
-  //location.href="/wp/cart/?add-to-cart=44,59";
+  //location.href="/cart/?add-to-cart=44,59";
 }
 
 
@@ -214,7 +214,7 @@ function gr_empty()
     jQuery.ajax({
     type: 'POST',
     dataType: 'json',
-    url: '/wp/wp-admin/admin-ajax.php?action=clear_cart',
+    url: '/wp-admin/admin-ajax.php?action=clear_cart',
     data: {action : 'clear_cart'},
     success: function (data) {
             if (data.status != 'success') {
@@ -545,7 +545,7 @@ function gr_go()
   //x+= "<div class='gr_img'>"+gr_img_cube+"</div>";
 
   x="Use this page to help you pick out an inexpensive Bath Interferometer or if you already know what you want you ";
-  x+="<a href='https://thegr5store.com/wp/?product_cat=bath'>can click here to see all products.</a><p>";
+  x+="<a href='https://thegr5store.com/?product_cat=bath'>can click here to see all products.</a><p>";
 
   x+="<br>";
   x+="Step 1 - choose laser and diverger<br>\n";
@@ -1028,7 +1028,7 @@ function choose_optics()
 function gr_addtocart()
 {
   document.getElementById('idAddToCart').setAttribute("disabled", "disabled");
-  var url = "/wp/cart/?add-to-cart=";
+  var url = "/cart/?add-to-cart=";
   url += inst_cost_summer.get_prod_ids().join(",");
   location.href=url;
 }

@@ -1,5 +1,7 @@
 Yes this is the latest folder of files that get copied to thegr5store.com
 
+Copy everything in this folder (this txt file you are reading doesn't need to be copied).  Here is how to copy one file:
+
 scp grstuff.js grfivorg@gr5.org:public_html/wp/wp-content/themes/gr5/
 
 

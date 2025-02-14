@@ -182,9 +182,9 @@ function gr5_hook_javascript_footer() {
      return;
 
   // okay this is the "home" page
-  echo "<script src='".dirname($_SERVER['PHP_SELF'])."/wp-content/themes/gr5/grstuff.js'></script>\n";
+  echo "<script src='".dirname($_SERVER['PHP_SELF'])."wp-content/themes/gr5/grstuff.js'></script>\n";
   echo "<script>\n";
-  echo "var gr_theme_path='".dirname($_SERVER['PHP_SELF'])."/wp-content/themes/gr5/';\n";
+  echo "var gr_theme_path='".dirname($_SERVER['PHP_SELF'])."wp-content/themes/gr5/';\n";
   echo "var gr_prices=[];\n";
   echo "var gr_instock=[];\n";
   echo "var gr_pretty_price=[];\n";
