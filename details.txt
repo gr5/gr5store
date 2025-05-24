@@ -1,4 +1,4 @@
-Yes this is the latest folder of files that get copied to thegr5store.com
+Yes this is the latest folder of files that get copied to thegr5store.com and this is a repository!
 
 Copy everything in this folder (this txt file you are reading doesn't need to be copied).  Here is how to copy one file:
 

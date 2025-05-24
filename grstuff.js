@@ -333,6 +333,61 @@ function selectLenses(laser_type_in)
     var i,j,ll,iprev,fratio;
     // assumes laser_lens_combos is sorted 
     // 
+
+    //
+    // special case: let's see if all mirrors prefer the same lens
+    //
+
+    picked_lens=-1;
+
+    for (i=0; i < fratios_subset.length; i++)
+    {
+      fratio = fratios_subset[i];
+      var best_dist_to_center=100;
+      var best=-1;
+      for (j = 0; j<laser_lens_combos.length; j++)
+      {
+        ll = laser_lens_combos[j];
+        if ( (ll.laser_type == laser_type_in || laser_type_in=="") && ll.inrange(fratio))
+        {
+          var dist_to_center = Math.abs((ll.minfr+ll.maxfr)/2 - fratio);
+          if (dist_to_center < best_dist_to_center)
+          {
+            best_dist_to_center = dist_to_center;
+            best = j;
+          }
+        }
+      }
+      if (best >= 0)
+      {
+        if (picked_lens == -1)
+          picked_lens = best;
+        else if (picked_lens != best)
+        {
+          // didn't work; give up
+          picked_lens = -1;
+          break;
+        }
+      }
+    }
+    if (picked_lens != -1)
+    {
+      // add all mirrors to this lens
+      ll = laser_lens_combos[picked_lens];
+      for (i=0; i < fratios_subset.length; i++)
+      {
+        fratio = fratios_subset[i];
+        ll.addMirror(fratio);
+      }
+      return;
+    }
+
+    //
+    // that didn't work.  Let's try the old way.
+    // TODO: If the old way picks only one lens, maybe see if there is a better lens for all the
+    // mirrors
+    //
+
     for (i=0; i < fratios_subset.length; i++)
     {
       fratio = fratios_subset[i];
@@ -348,7 +403,7 @@ function selectLenses(laser_type_in)
       }
     }
     
-    // okay but maybe we can simplify.  Maybe we can move all the mirrors from one F/# to another
+    // okay but maybe we can simplify.  Maybe we can move all the mirrors from one LL to another
     // i is outer loop and ll needed
     // inext is next ll needed that we will compare to
 
