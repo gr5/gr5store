@@ -308,6 +308,7 @@ function tryMove(i1, i2)
 {
     // try to move all F#'s from i1 laserLens to i2 laserlens
     // return true if successful
+    // move nothing and return false if even one f# won't work
     var ll1 = laser_lens_combos[i1];
     var ll2 = laser_lens_combos[i2];
     var i;
@@ -315,7 +316,7 @@ function tryMove(i1, i2)
     {
         var f = ll1.mirror_ary[i];
         if (ll2.inrange(f) == false)
-            return false; // can't do it
+            return false; // can't do it - at least one f# won't work
     }
     
     // It's possible!  let's do it
@@ -337,7 +338,7 @@ function selectLenses(laser_type_in)
     //
     // special case: let's see if all mirrors prefer the same lens
     //
-
+    /*
     picked_lens=-1;
 
     for (i=0; i < fratios_subset.length; i++)
@@ -381,18 +382,16 @@ function selectLenses(laser_type_in)
       }
       return;
     }
-
+    */
     //
-    // that didn't work.  Let's try the old way.
-    // TODO: If the old way picks only one lens, maybe see if there is a better lens for all the
-    // mirrors
+    // First pick the longest F.L. lens that will work
     //
 
     for (i=0; i < fratios_subset.length; i++)
     {
       fratio = fratios_subset[i];
-      //for (j = laser_lens_combos.length-1; j>=0; j--)
-      for (j = 0; j<laser_lens_combos.length; j++)
+      for (j = laser_lens_combos.length-1; j>=0; j--) // this traversal order picks longest possible F.L.
+      //for (j = 0; j<laser_lens_combos.length; j++)  // this traversal order picks shortest possible F.L.
       {
         ll = laser_lens_combos[j];
         if ( (ll.laser_type == laser_type_in || laser_type_in=="") && ll.inrange(fratio))
@@ -430,6 +429,31 @@ function selectLenses(laser_type_in)
         }
         // no luck so far - increment i
     }
+    
+    //
+    // Save money option
+    // If they are only getting one lens.  And its more expensive.  Check if we can get only a different lens instead
+    //
+    
+    neededLensIndex = findNextNeededLL(-1, laser_type_in, true); // get first LL with mirrors in it
+    if (neededLensIndex == -1)return; // no LLs!
+
+    // check previous lens in list
+    i = neededLensIndex;
+    ll_current = laser_lens_combos[i];
+    while(true)
+    {
+        i--;
+        if (i < 0)break; // no luck
+        ll = laser_lens_combos[i];
+        if (ll.laser_type != laser_type_in)continue;
+        // okay - found one.  Is it cheaper?
+        if (ll.price >= ll_current.price)
+            break; // not cheaper
+        if (tryMove(neededLensIndex, i))
+            return; // success
+    }
+    
 }
 
 function maxMirrorForF(f)
@@ -562,16 +586,24 @@ function gr_clear_f()
 function gr_go()
 {
   // must be sorted by minimum F/# column
-  laser_lens_combos.push( new laser_lens("glass", 7.65, 1.8, 4.4, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
+  // sorting rules: 
+  // 1) within a laser type (glass versus reg) first f/# column must be in order (second numeric column)
+  // 2) First LL must be the lowest f/#
+  // 3) Last 2 LLs must be the edmunds ones in order of f/#
+  //
+  // therefore I can put most of the glass together so I will.  
+  
 //laser_lens_combos.push( new laser_lens("glass", 9,    2.6, 5.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
-  laser_lens_combos.push( new laser_lens("glass", 10,   2.8, 5.6, gr_prices['lens10'],  "", gr_prod_id['lens10'] ));
-  laser_lens_combos.push( new laser_lens("reg",   7.65, 3.3, 6.6, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
 //laser_lens_combos.push( new laser_lens("reg",   9,    3.6, 7.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
+
+  laser_lens_combos.push( new laser_lens("glass", 7.65, 1.8, 4.4, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
+  laser_lens_combos.push( new laser_lens("glass", 10,   2.8, 5.6, gr_prices['lens10'],  "", gr_prod_id['lens10'] ));
   laser_lens_combos.push( new laser_lens("glass", 13,   3.7, 7.4, gr_prices['lens13'], "", gr_prod_id['lens13'] ));
+  laser_lens_combos.push( new laser_lens("glass", 20,   5.4, 12,  gr_prices['lens20'], "", gr_prod_id['lens20'] ));
+
+  laser_lens_combos.push( new laser_lens("reg",   7.65, 3.3, 6.6, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
   laser_lens_combos.push( new laser_lens("reg",   10,   4.0, 8.0, gr_prices['lens10'], "", gr_prod_id['lens10'] ));
   laser_lens_combos.push( new laser_lens("reg",   13,   4.7, 10,  gr_prices['lens13'], "", gr_prod_id['lens13'] ));
-  
-  laser_lens_combos.push( new laser_lens("glass", 20,   5.4, 12,  gr_prices['lens20'], "", gr_prod_id['lens20'] ));
   laser_lens_combos.push( new laser_lens("reg",   20,   8.0, 16,  gr_prices['lens20'], "", gr_prod_id['lens20'] ));
   
 
