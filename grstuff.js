@@ -597,12 +597,14 @@ function gr_go()
 //laser_lens_combos.push( new laser_lens("reg",   9,    3.6, 7.2, gr_prices['lens9'],  "", gr_prod_id['lens9'] ));
 
   laser_lens_combos.push( new laser_lens("glass", 7.65, 1.8, 4.4, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
-  laser_lens_combos.push( new laser_lens("glass", 10,   2.8, 5.6, gr_prices['lens10'],  "", gr_prod_id['lens10'] ));
+  if (gr_instock['lens10'])
+  laser_lens_combos.push( new laser_lens("glass", 10,   2.8, 5.6, gr_prices['lens10'],  "", gr_prod_id['lens10'] )); // to force pick this try f/3 and f/5
   laser_lens_combos.push( new laser_lens("glass", 13,   3.7, 7.4, gr_prices['lens13'], "", gr_prod_id['lens13'] ));
   laser_lens_combos.push( new laser_lens("glass", 20,   5.4, 12,  gr_prices['lens20'], "", gr_prod_id['lens20'] ));
 
   laser_lens_combos.push( new laser_lens("reg",   7.65, 3.3, 6.6, gr_prices['lens765'],"", gr_prod_id['lens765'] ));
-  laser_lens_combos.push( new laser_lens("reg",   10,   4.0, 8.0, gr_prices['lens10'], "", gr_prod_id['lens10'] ));
+  if (gr_instock['lens10'])
+  laser_lens_combos.push( new laser_lens("reg",   10,   4.0, 8.0, gr_prices['lens10'], "", gr_prod_id['lens10'] )); // to force pick this try f/4 and f/7
   laser_lens_combos.push( new laser_lens("reg",   13,   4.7, 10,  gr_prices['lens13'], "", gr_prod_id['lens13'] ));
   laser_lens_combos.push( new laser_lens("reg",   20,   8.0, 16,  gr_prices['lens20'], "", gr_prod_id['lens20'] ));
   
